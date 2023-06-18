@@ -3,8 +3,8 @@ Flask API Application
 """
 from flask import Flask, jsonify, request
 from flasgger import Swagger, swag_from, LazyString, LazyJSONEncoder
-from db import create_connection, insert_dictionary_to_db, insert_result_to_db, show_cleansing_result
-from cleansing_function import text_cleansing
+from db import create_connection, insert_dictionary_to_db, insert_result_to_db, show_cleansing_result, insert_upload_result_to_db
+from cleansing_function import text_cleansing, cleansing_files
 
 # Prevent sorting keys in JSON response
 import flask
@@ -76,6 +76,20 @@ def cleansing_form():
     insert_result_to_db(db_connection, raw_text, clean_text)
     return jsonify(result_response)
 
+# Cleansing text using csv upload
+@swag_from('docs/cleansing_upload.yml', methods=['POST'])
+@app.route('/cleansing_upload', methods=['POST'])
+def cleansing_upload():
+    # Get file from upload to dataframe
+    uploaded_file = request.files['upload_file']
+    # Read csv file to dataframe then cleansing
+    df_cleansing = cleansing_files(uploaded_file)
+    # Upload result to database
+    db_connection = create_connection()
+    insert_upload_result_to_db(db_connection, df_cleansing)
+    print("Upload result to database success!")
+    result_response = df_cleansing.T.to_dict()
+    return jsonify(result_response)
 
 if __name__ == '__main__':
     app.run()

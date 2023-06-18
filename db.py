@@ -38,6 +38,12 @@ def insert_result_to_db(conn, raw_text, clean_text):
     df.to_sql('cleansing_result', conn, if_exists='append', index=False)
     print("Inserting result to database success!")
 
+def insert_upload_result_to_db(conn, clean_df):
+    # Insert result to database
+    print("Inserting result to database...")
+    clean_df.to_sql('cleansing_result', conn, if_exists='append', index=False)
+    print("Inserting result to database success!")
+
 def show_cleansing_result(conn):
     # Show cleansing result
     print("Showing cleansing result...")
