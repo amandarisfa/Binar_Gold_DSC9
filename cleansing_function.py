@@ -19,14 +19,14 @@ def cleansing_files(file_upload):
     try:
         df_upload = pd.read_csv(file_upload)
     except:
-        df_upload = pd.read_csv(file_upload, encoding='latin')
-    df_upload = pd.read_csv(file_upload, encoding='latin')
+        df_upload = pd.read_csv(file_upload, encoding="latin-1")
     print("Read dataframe from upload success!")
     # Ambil hanya kolom pertama saja
-    df_upload = df_upload.iloc[:,0]
+    df_upload = pd.DataFrame(df_upload.iloc[:,0])
     # Rename kolom menjadi "raw_text"
     df_upload.columns = ["raw_text"]
     # Bersihkan text menggunakan fungsi text_cleansing
     # Simpan di kolom "clean_text"
-    df_upload("Cleansing text success!")
+    df_upload["clean_text"] = df_upload["raw_text"].apply(text_cleansing)
+    print("Cleansing text success!")
     return df_upload

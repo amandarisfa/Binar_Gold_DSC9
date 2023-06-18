@@ -1,9 +1,14 @@
-"""
+""" 
 Flask API Application
 """
 from flask import Flask, jsonify, request
+import pandas as pd
 from flasgger import Swagger, swag_from, LazyString, LazyJSONEncoder
-from db import create_connection, insert_dictionary_to_db, insert_result_to_db, show_cleansing_result, insert_upload_result_to_db
+from db import (
+    create_connection, insert_dictionary_to_db, 
+    insert_result_to_db, show_cleansing_result,
+    insert_upload_result_to_db
+)
 from cleansing_function import text_cleansing, cleansing_files
 
 # Prevent sorting keys in JSON response
@@ -36,14 +41,14 @@ swagger_config = {
             "route": '/docs.json',
         }
     ],
-    "static_url_path": "/flasgger-static",
+    "static_url_path": "/flasgger_static",
     "swagger_ui": True,
     "specs_route": "/docs/"
 }
 # Initialize Swagger from swagger template & config
 swagger = Swagger(app, template=swagger_template, config=swagger_config)
 
-#Homepage
+# Homepage
 @swag_from('docs/home.yml', methods=['GET'])
 @app.route('/', methods=['GET'])
 def home():
@@ -83,7 +88,7 @@ def cleansing_upload():
     # Get file from upload to dataframe
     uploaded_file = request.files['upload_file']
     # Read csv file to dataframe then cleansing
-    df_cleansing = cleansing_files(uploaded_file)
+    df_cleansing = cleansing_files(uploaded_file, encoding="latin-1")
     # Upload result to database
     db_connection = create_connection()
     insert_upload_result_to_db(db_connection, df_cleansing)
