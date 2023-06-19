@@ -27,9 +27,9 @@ app.json_encoder = LazyJSONEncoder
 # Create Swagger Config & Swagger template
 swagger_template = {
     "info": {
-        "title": LazyString(lambda: "Text Cleansing API"),
+        "title": LazyString(lambda: "Flask API for Data Cleansing"),
         "version": LazyString(lambda: "1.0.0"),
-        "description": LazyString(lambda: "Dokumentasi API untuk membersihkan text")
+        "description": LazyString(lambda: "Dokumentasi API untuk membersihkan data teks dan file")
     },
     "host": LazyString(lambda: request.host)
 }
@@ -88,7 +88,7 @@ def cleansing_upload():
     # Get file from upload to dataframe
     uploaded_file = request.files['upload_file']
     # Read csv file to dataframe then cleansing
-    df_cleansing = cleansing_files(uploaded_file, encoding="latin-1")
+    df_cleansing = cleansing_files(uploaded_file)
     # Upload result to database
     db_connection = create_connection()
     insert_upload_result_to_db(db_connection, df_cleansing)

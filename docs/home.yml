@@ -1,13 +1,13 @@
 tags:
-  - name: get API information
+  - name: get API Information
 paths:
   /:
 get:
-  description: get API information
+  description: get API Information
 responses:
-  '200':
-    description: Successful Response
-  '400':
-    description: Bad Request
-  '500': 
-    description: Internal Server Error
+    '200':
+      description: Successful response
+    '400':
+      description: Bad Request
+    '500':
+      description: Internal Server Error
